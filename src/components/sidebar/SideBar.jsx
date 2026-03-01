@@ -9,7 +9,8 @@ import SidebarHeader from "./SideBarHeader"
 import SidebarActions from "./SidebarActions"
 import ProjectList from "./ProjectList"
 import SidebarUser from "./SidebarUser"
-import SidebarSearch from "./SidebarSearch" // ✅ MISSING IMPORT
+import SidebarSearch from "./SidebarSearch"
+import Process from "./HowToConnect"
 
 export default function Sidebar({
   userName = "User",
@@ -20,9 +21,11 @@ export default function Sidebar({
   const { state, dispatch } = useRadar()
   const { token, project } = state
 
+  // ✅ Process Panel State
+  const [showProcess, setShowProcess] = useState(false)
+
   const [searchOpen, setSearchOpen] = useState(false)
   const [query, setQuery] = useState("")
-
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
   const [collapsed, setCollapsed] = useState(false)
@@ -46,8 +49,8 @@ export default function Sidebar({
   function handleSelectProject(p) {
     dispatch({ type: "SET_PROJECT", payload: p })
     onNavigate?.()
-    setSearchOpen(false)     // ✅ close search
-    setQuery("")             // ✅ reset
+    setSearchOpen(false)
+    setQuery("")
     router.push(`/projects/${p.id}`)
   }
 
@@ -71,51 +74,70 @@ export default function Sidebar({
   }, [])
 
   return (
-    <div
-      className={`flex h-full flex-col border-r border-zinc-800 bg-zinc-950 transition-all ${
-        collapsed ? "w-16" : "w-64"
-      }`}
-    >
-      {/* Header */}
-      <SidebarHeader collapsed={collapsed} setCollapsed={setCollapsed} />
+    <>
+      <div
+        className={`flex h-full flex-col border-r border-zinc-800 bg-zinc-950 transition-all ${
+          collapsed ? "w-16" : "w-64"
+        }`}
+      >
+        {/* Header */}
+        <SidebarHeader collapsed={collapsed} setCollapsed={setCollapsed} />
 
-      {/* 🔍 SEARCH INPUT (THIS WAS MISSING) */}
-      <SidebarSearch
-        open={searchOpen}
-        query={query}
-        setQuery={setQuery}
-        onClose={() => {
-          setSearchOpen(false)
-          setQuery("")
-        }}
-      />
+        {/* Search */}
+        <SidebarSearch
+          open={searchOpen}
+          query={query}
+          setQuery={setQuery}
+          onClose={() => {
+            setSearchOpen(false)
+            setQuery("")
+          }}
+        />
 
-      {/* Actions */}
-      <SidebarActions
-        collapsed={collapsed}
-        onNewProject={() => {
-          onNavigate?.()
-          router.push("/projects/new")
-        }}
-        onSearchOpen={() => setSearchOpen(true)} // ✅ works now
-      />
+        {/* Actions */}
+        <SidebarActions
+          collapsed={collapsed}
+          onNewProject={() => {
+            onNavigate?.()
+            router.push("/projects/new")
+          }}
+          onSearchOpen={() => setSearchOpen(true)}
+        />
 
-      {/* Projects */}
-      <ProjectList
-        projects={filteredProjects}
-        loading={loading}
-        collapsed={collapsed}
-        activeProject={project}
-        onSelect={handleSelectProject}
-      />
+        {/* ✅ HOW TO USE OPTION */}
+        <div className="px-4 py-2">
+          <button
+            onClick={() => setShowProcess(true)}
+            className="flex items-center gap-2 w-full px-3 py-2 rounded hover:bg-zinc-800 text-zinc-300"
+          >
+            <span>📘</span>
+            {!collapsed && <span>How To Use</span>}
+          </button>
+        </div>
 
-      {/* User */}
-      <SidebarUser
-        userName={userName}
-        wsConnected={wsConnected}
-        collapsed={collapsed}
-        onLogout={handleLogout}
+        {/* Projects */}
+        <ProjectList
+          projects={filteredProjects}
+          loading={loading}
+          collapsed={collapsed}
+          activeProject={project}
+          onSelect={handleSelectProject}
+        />
+
+        {/* User */}
+        <SidebarUser
+          userName={userName}
+          wsConnected={wsConnected}
+          collapsed={collapsed}
+          onLogout={handleLogout}
+        />
+      </div>
+
+      {/* ✅ PROCESS SIDE PANEL */}
+      <Process
+        open={showProcess}
+        onClose={() => setShowProcess(false)}
       />
-    </div>
+    </>
   )
 }
