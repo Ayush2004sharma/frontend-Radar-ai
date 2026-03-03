@@ -39,3 +39,45 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #3f3f46; /* zinc-700 */
 }
+/* Smooth scrolling */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+/* Slim Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* Firefox support */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #27272a transparent;
+}
+/* Extra smooth feel */
+.smooth-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* iOS buttery scroll */
+}
+
+/* GPU acceleration */
+.will-change-scroll {
+  will-change: scroll-position;
+  transform: translateZ(0);
+}
+
+
