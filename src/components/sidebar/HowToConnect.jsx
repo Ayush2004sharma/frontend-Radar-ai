@@ -50,6 +50,8 @@ export default function Process({ open, onClose }) {
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto smooth-scroll custom-scrollbar p-6 space-y-6 text-sm text-zinc-300">
+
+          {/* STEP 1 */}
           <Step
             title="1️⃣ Install Radar SDK"
             desc={
@@ -60,6 +62,7 @@ export default function Process({ open, onClose }) {
             }
           />
 
+          {/* STEP 2 */}
           <Step
             title="2️⃣ Connect Your Project"
             desc={
@@ -70,8 +73,57 @@ export default function Process({ open, onClose }) {
             }
           />
 
+          {/* STEP 3 */}
           <Step
-            title="3️⃣ Start Your Application"
+            title="3️⃣ Create Logger File (Required)"
+            desc={
+              <>
+                Create a file named <b>logger.js</b> inside your backend root:
+
+                <CodeBlock
+                  command={`import { createLogger, format, transports } from "winston";
+
+const logger = createLogger({
+  level: "info",
+  format: format.combine(
+    format.timestamp(),
+    format.printf(({ timestamp, level, message }) => {
+      return \`\${timestamp} [\${level.toUpperCase()}] \${message}\`;
+    })
+  ),
+  transports: [
+    new transports.File({ filename: "app.log" }),
+    new transports.Console()
+  ]
+});
+
+export default logger;`}
+                />
+              </>
+            }
+          />
+
+          {/* STEP 4 */}
+          {/* STEP 4 */}
+<Step
+  title="4️⃣ Connect Logger In Your Server"
+  desc={
+    <>
+      Import logger inside your server and add a log entry:
+
+      <CodeBlock
+        command={`import logger from './logger.js';
+
+logger.info("Server started");`}
+      />
+    </>
+  }
+/>
+          
+
+          {/* STEP 5 */}
+          <Step
+            title="5️⃣ Start Your Application"
             desc={
               <>
                 Run your backend normally:
@@ -82,15 +134,18 @@ export default function Process({ open, onClose }) {
             }
           />
 
+          {/* STEP 6 */}
           <Step
-            title="4️⃣ Diagnose Incidents"
+            title="6️⃣ Diagnose Incidents"
             desc="When errors occur, Radar detects incidents, ranks relevant files, and generates AI-powered fixes automatically."
           />
 
+          {/* STEP 7 */}
           <Step
-            title="🔐 Privacy First"
+            title="7️⃣ 🔐 Privacy First"
             desc="Radar never stores your full source code. Files are requested only when required for debugging."
           />
+
         </div>
       </div>
     </div>,
